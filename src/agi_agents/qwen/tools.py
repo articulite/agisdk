@@ -65,6 +65,8 @@ class QwenToolExecutor:
             return await self._execute_drag(tool_input)
         elif tool_name == "type":
             return await self._execute_type(tool_input)
+        elif tool_name == "type_dropdown":
+            return await self._execute_type_dropdown(tool_input)
         elif tool_name == "replace_text":
             return await self._execute_replace_text(tool_input)
         elif tool_name == "hotkey":
@@ -125,6 +127,24 @@ class QwenToolExecutor:
         content = tool_input["content"]
         await self.page.keyboard.type(content, delay=0)
         return f"Typed: {content[:50]}{'...' if len(content) > 50 else ''}"
+
+    async def _execute_type_dropdown(self, tool_input: Dict[str, Any]) -> str:
+        point = tool_input["point_2d"]
+        content = tool_input["content"]
+        x, y = self.scale_coordinates(point[0], point[1])
+        
+        await self.page.mouse.click(x, y)
+        # Wait for dropdown to open / focus
+        await self.page.wait_for_timeout(500)
+        
+        # Type the text
+        await self.page.keyboard.type(content, delay=100)
+        
+        # Wait before pressing Enter
+        await self.page.wait_for_timeout(1000)
+        await self.page.keyboard.press("Enter")
+        
+        return f"Typed '{content}' in dropdown at ({point[0]}, {point[1]})"
 
     async def _execute_replace_text(self, tool_input: Dict[str, Any]) -> str:
         point = tool_input["point_2d"]

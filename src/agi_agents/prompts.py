@@ -42,6 +42,7 @@ hover({{"point_2d": [x, y]}})
 press_and_hold({{"point_2d": [x, y]}})
 drag({{"start_point_2d": [x, y], "end_point_2d": [x, y]}})
 type({{"content": "text"}}) - Use \\n for Enter.
+type_dropdown({{"point_2d": [x, y], "content": "text"}}) - Click, type text, Enter.
 replace_text({{"point_2d": [x, y], "content": "text"}}) - Click, clear field (Ctrl+A + Backspace), and type text.
 hotkey({{"key": "Control+A"}})
 scroll({{"direction": "up/down/left/right", "point_2d": [x, y], "pixels": 600}})
@@ -55,6 +56,9 @@ finished({{"content": "summary"}})
 - Click before typing.
 - To change text in a field, prefer using replace_text instead of manually clearing.
 - For hidden dropdowns, use provided option values.
+- MANDATORY: Use type_dropdown for ANY dropdown, time picker, date input, or combo box.
+- NEVER scroll to find an option in a list. Always use type_dropdown.
+- NEVER click the element and then call type(). Use type_dropdown which handles both.
 - Report task details in finished().
 - CRITICAL: If the state does not change after an action, DO NOT REPEAT the same action. Try a different coordinate, a different part of the element, or a different tool.
 - Verify your action's effect by checking the screenshot.
@@ -64,7 +68,16 @@ finished({{"content": "summary"}})
 Reasoning line.
 Tool call.
 
-Example:
+Examples:
 Clicking login.
 click({{"point_2d": [920, 50]}})
+
+Selecting 10:00 AM from dropdown.
+type_dropdown({{"point_2d": [500, 300], "content": "10:00 AM"}})
+
+Selecting "United States" from country list.
+type_dropdown({{"point_2d": [300, 400], "content": "United States"}})
+
+Setting date to July 19, 2024.
+type_dropdown({{"point_2d": [400, 500], "content": "July 19, 2024"}})
 """

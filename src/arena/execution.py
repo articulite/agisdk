@@ -1,5 +1,7 @@
 from typing import TYPE_CHECKING, Optional, Tuple
 import asyncio
+import os
+import base64
 
 from arena.state import AgentState
 from arena.errors import AgentError
@@ -85,6 +87,16 @@ class TaskExecution:
             # Take screenshot and store in state
             screenshot = await self.browser.screenshot()
             state.images.append(screenshot)
+            
+            # Save screenshot if enabled
+            if os.getenv("SAVE_SCREENSHOTS", "").lower() == "true":
+                try:
+                    step_str = str(step).zfill(3)
+                    filename = f"screenshot_{step_str}.jpg"
+                    with open(filename, "wb") as f:
+                        f.write(base64.b64decode(screenshot))
+                except Exception as e:
+                    print(f"Failed to save screenshot: {e}")
 
             # Execute agent step
             try:
