@@ -13,7 +13,7 @@ from deepdiff import DeepDiff
 import jmespath
 from rich import print
 
-OPENAI_MODEL = os.environ.get("OPENAI_MODEL", "gpt-5")
+OPENAI_MODEL = os.environ.get("OPENAI_MODEL", "openai/gpt-4o")
 
 
 # ------------------- IndexedDB extractor (as provided) ------------------------
@@ -82,7 +82,19 @@ async def eval_llm_yesno(prompt: str) -> str:
     """
     try:
         from openai import AsyncOpenAI
-        client = AsyncOpenAI()
+        api_key = os.environ.get("OPENROUTER_API_KEY")
+        if not api_key:
+            print("[red]Error: OPENROUTER_API_KEY not found in environment[/red]")
+            return "NO (API key missing)"
+        
+        # Mask key for logging: show first 4 chars and last 4 chars
+        masked_key = f"{api_key[:4]}...{api_key[-4:]}" if len(api_key) > 8 else "***"
+        print(f"[dim]Using OpenRouter API with key: {masked_key}[/dim]")
+
+        client = AsyncOpenAI(
+            base_url="https://openrouter.ai/api/v1",
+            api_key=api_key,
+        )
         resp = await client.chat.completions.create(
             model=OPENAI_MODEL,
             messages=[{"role": "user", "content": prompt}],
