@@ -1,6 +1,7 @@
 import asyncio
 import traceback
 import glob
+import os
 from pathlib import Path
 from typing import List, Any, Union, Optional
 import os.path as osp
@@ -28,6 +29,10 @@ class RunHarness:
     ):
         self.agent = agent
         self.ignore_errors = ignore_errors
+
+        # Override headless from environment variable if present
+        if os.getenv("HEADLESS"):
+            headless = os.getenv("HEADLESS").lower() == "true"
 
         if tasks is None:
             raise ValueError("Must specify either 'tasks' or 'resume' parameter")
