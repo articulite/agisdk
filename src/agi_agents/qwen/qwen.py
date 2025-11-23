@@ -14,7 +14,7 @@ from openai import AsyncOpenAI
 from PIL import Image
 
 from arena import BaseAgent, AgentBrowser, AgentState
-from agi_agents.prompts import QWEN_AGENT
+from agi_agents.prompts import QWEN_AGENT, KK_AGENT
 from .tools import QwenToolExecutor
 
 
@@ -38,7 +38,10 @@ class QwenAgent(BaseAgent):
         # model: str = "qwen3-vl-plus",
         #model: str = "qwen/qwen3-vl-235b-a22b-thinking",
         #model: str = "google/gemini-2.5-flash-preview-09-2025",
-        model: str = "google/gemini-3-pro-image-preview",
+        # model: str = "google/gemini-3-pro-image-preview",
+        # model: str = "x-ai/grok-code-fast-1",
+        model: str = "google/gemini-2.5-flash-lite-preview-09-2025",
+        # model: str = "google/gemini-2.0-flash-exp",
         date_mode: str = "current",
         base_url: str | None = None,
         api_key: str | None = None,
@@ -117,7 +120,7 @@ class QwenAgent(BaseAgent):
 
         system_message = {
             "role": "system",
-            "content": QWEN_AGENT.format(date=current_date),
+            "content": KK_AGENT.format(date=current_date),
         }
 
         # If no messages yet, create first user message with goal
@@ -217,6 +220,7 @@ class QwenAgent(BaseAgent):
             state.messages.append(
                 {"role": "user", "content": f"## Task Goal\n{state.goal}"}
             )
+            print(f"\n--- USER (Goal) ---\n{state.goal}")
 
         # Append current screenshot message to state to interleave with dialogue
 
@@ -235,6 +239,7 @@ class QwenAgent(BaseAgent):
                 ],
             }
         )
+        print("\n--- USER (Screenshot) ---")
 
         # Build messages (will filter to the last 4 images)
         messages = await self.build_messages(state, screenshot)
@@ -260,7 +265,9 @@ class QwenAgent(BaseAgent):
         message = response.choices[0].message
 
         # Save assistant message to state (just content, no tool parsing)
-        state.messages.append({"role": "assistant", "content": message.content or ""})
+        content = message.content or ""
+        state.messages.append({"role": "assistant", "content": content})
+        print(f"\n--- ASSISTANT ---\n{content}")
 
         # Parse and execute tool calls
         tool_calls = self._parse_tool_calls(message.content)
@@ -309,6 +316,8 @@ Available dropdown options: {dropdown_options}"""
                 result_parts.append(dropdown_message)
 
             # Save result as simple user message
-            state.messages.append({"role": "user", "content": "\n".join(result_parts)})
+            result_content = "\n".join(result_parts)
+            state.messages.append({"role": "user", "content": result_content})
+            print(f"\n--- TOOL RESULTS ---\n{result_content}")
 
         return state
