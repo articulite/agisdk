@@ -45,7 +45,7 @@ class QwenAgent(BaseAgent):
         self.date_mode = date_mode
         assert date_mode in ["fixed", "current"]
 
-        api_key = api_key or os.getenv("OPENAI_API_KEY")
+        api_key = os.getenv("OPENROUTER_API_KEY")
         base_url = (base_url or "https://openrouter.ai/api/v1").rstrip("/")
         self.client = AsyncOpenAI(
             base_url=base_url,
