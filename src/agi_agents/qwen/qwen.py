@@ -294,7 +294,7 @@ class QwenAgent(BaseAgent):
                 if state.finished:
                     break
 
-            await browser.page.wait_for_timeout(2000)
+            await browser.page.wait_for_timeout(500)
 
             # Check for open dropdowns
             try:
