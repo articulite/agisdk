@@ -209,6 +209,11 @@ class QwenAgent(BaseAgent):
         image = Image.open(io.BytesIO(screenshot))
         original_width, original_height = image.width, image.height
 
+        # Resize image to reduce latency/tokens (matching media_resolution="low")
+        max_dimension = 512
+        if max(image.width, image.height) > max_dimension:
+            image.thumbnail((max_dimension, max_dimension), Image.Resampling.LANCZOS)
+
         # Ensure first turn includes task goal before image
         if not state.messages:
             state.messages.append(
@@ -218,7 +223,7 @@ class QwenAgent(BaseAgent):
 
         # Append current screenshot message to state to interleave with dialogue
 
-        data_url = self._screenshot_to_data_url(screenshot)
+        data_url = _pil_to_data_url(image)
 
         state.messages.append(
             {

@@ -50,6 +50,7 @@ select_dropdown({{"value": "opt"}})
 finished({{"content": "summary"}})
 
 ## Rules
+- Coordinates are normalized to 0-1000 range (0,0 is top-left, 1000,1000 is bottom-right).
 - Date: {date}
 - Click before typing.
 - To change text in a field, prefer using replace_text instead of manually clearing.
