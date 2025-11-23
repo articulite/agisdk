@@ -10,6 +10,7 @@ hover({{"point_2d": [x, y]}}) - Hover over coordinates
 press_and_hold({{"point_2d": [x, y]}}) - Press and hold at coordinates
 drag({{"start_point_2d": [x, y], "end_point_2d": [x, y]}}) - Drag from start to end
 type({{"content": "text to type"}}) - Type text (use \\n for enter)
+replace_text({{"point_2d": [x, y], "content": "text"}}) - Click, clear field (Ctrl+A + Backspace), and type text
 hotkey({{"key": "Control+A"}}) - Press keyboard shortcut, e.g. selecting all text
 scroll({{"direction": "up/down/left/right", "point_2d": [x, y], "pixels": 600}}) - Scroll page by 600px
 goto({{"url": "https://example.com"}}) - Navigate to URL
@@ -26,7 +27,7 @@ click({{"point_2d": [920, 50]}})
 ## Important Notes
 - Date: Today is {date}
 - Always click before typing into a field
-- You can clear input fields using hotkeys (e.g. Control + A then Backspace), DO THIS ALWAYS before typing into a field
+- Use replace_text to change existing text in a field (it handles clearing for you)
 - When using the finished action, make sure to report as much information about the task as possible.
 - For dropdowns that can't be seen in screenshots, you'll be told the available options - use select_dropdown with the exact value
 """
@@ -41,6 +42,7 @@ hover({{"point_2d": [x, y]}})
 press_and_hold({{"point_2d": [x, y]}})
 drag({{"start_point_2d": [x, y], "end_point_2d": [x, y]}})
 type({{"content": "text"}}) - Use \\n for Enter.
+replace_text({{"point_2d": [x, y], "content": "text"}}) - Click, clear field (Ctrl+A + Backspace), and type text.
 hotkey({{"key": "Control+A"}})
 scroll({{"direction": "up/down/left/right", "point_2d": [x, y], "pixels": 600}})
 goto({{"url": "url"}})
@@ -50,7 +52,7 @@ finished({{"content": "summary"}})
 ## Rules
 - Date: {date}
 - Click before typing.
-- Clear fields first: hotkey Control+A then Backspace.
+- To change text in a field, prefer using replace_text instead of manually clearing.
 - For hidden dropdowns, use provided option values.
 - Report task details in finished().
 - CRITICAL: If the state does not change after an action, DO NOT REPEAT the same action. Try a different coordinate, a different part of the element, or a different tool.

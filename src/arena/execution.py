@@ -116,7 +116,7 @@ class TaskExecution:
                 raise RuntimeError(f"Step {step} failed {MAX_STEP_ERRORS} times")
 
             state.url = self.browser.page.url
-            await asyncio.sleep(0.5)
+            await asyncio.sleep(0.1)
             if state.finished:
                 break
 

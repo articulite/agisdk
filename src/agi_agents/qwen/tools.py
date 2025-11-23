@@ -65,6 +65,8 @@ class QwenToolExecutor:
             return await self._execute_drag(tool_input)
         elif tool_name == "type":
             return await self._execute_type(tool_input)
+        elif tool_name == "replace_text":
+            return await self._execute_replace_text(tool_input)
         elif tool_name == "hotkey":
             return await self._execute_hotkey(tool_input)
         elif tool_name == "scroll":
@@ -121,8 +123,22 @@ class QwenToolExecutor:
 
     async def _execute_type(self, tool_input: Dict[str, Any]) -> str:
         content = tool_input["content"]
-        await self.page.keyboard.type(content, delay=50)
+        await self.page.keyboard.type(content, delay=0)
         return f"Typed: {content[:50]}{'...' if len(content) > 50 else ''}"
+
+    async def _execute_replace_text(self, tool_input: Dict[str, Any]) -> str:
+        point = tool_input["point_2d"]
+        content = tool_input["content"]
+        x, y = self.scale_coordinates(point[0], point[1])
+        
+        await self.page.mouse.click(x, y)
+        # Select all and delete
+        await self.page.keyboard.press("Control+A")
+        await self.page.keyboard.press("Backspace")
+        # Type new content
+        await self.page.keyboard.type(content, delay=0)
+        
+        return f"Replaced text at ({point[0]}, {point[1]}) with: {content[:50]}{'...' if len(content) > 50 else ''}"
 
     async def _execute_hotkey(self, tool_input: Dict[str, Any]) -> str:
         key = tool_input["key"]
