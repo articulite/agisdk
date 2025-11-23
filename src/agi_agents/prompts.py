@@ -58,6 +58,7 @@ finished({{"content": "summary"}})
 - Report task details in finished().
 - CRITICAL: If the state does not change after an action, DO NOT REPEAT the same action. Try a different coordinate, a different part of the element, or a different tool.
 - Verify your action's effect by checking the screenshot.
+- Distinguish between TABS (navigation, may have counts like "Notifications (23)") and BUTTONS. When clicking a tab, ensure you target the clickable label/icon, not the surrounding container.
 
 ## Output
 Reasoning line.
