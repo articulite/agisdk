@@ -154,15 +154,53 @@ async def main(tasks=None):
     harness = RunHarness(
         agent=agent,
         tasks=tasks,
-        parallel=1, # was 60
+        parallel=60, # was 60
         sample_count=1,
-        max_steps=60,
+        max_steps=int(os.getenv("MAX_STEPS", "60")),
         headless=True
     )
 
     results = await harness.run()
-    print(results)
+    
+    # Print summary
+    print("\n" + "="*60)
+    print("BENCHMARK SUMMARY")
+    print("="*60)
+    
+    total_tasks = len(results)
+    successful_tasks = 0
+    
+    for i, result in enumerate(results):
+        if not result:
+             continue
+        # Result is an ExperimentResult object, likely containing details in .details list/tuple
+        details = getattr(result, "details", [])
+        task_info = details[0] if details and len(details) > 0 else {}
+        
+        task_name = task_info.get("goal", f"Task {i+1}")
+        # Shorten task name if too long
+        if len(task_name) > 80:
+            task_name = task_name[:77] + "..."
 
+        is_success = result.success
+        if is_success:
+            successful_tasks += 1
+        status = "PASS" if is_success else "FAIL"
+        
+        # Extract criteria info
+        criteria_info = ""
+        passed_crit = task_info.get("passed_criteria")
+        total_crit = task_info.get("total_criteria")
+        
+        if passed_crit is not None and total_crit is not None:
+            criteria_info = f" ({passed_crit}/{total_crit} criteria)"
+            
+        print(f"Task: {task_name}")
+        print(f"Status: {status}{criteria_info}")
+        print("-" * 30)
+
+    print(f"\nTotal: {successful_tasks}/{total_tasks} tasks passed")
+    print("="*60)
 
 if __name__ == "__main__":
     # Allow passing tasks via command line args to bypass GUI

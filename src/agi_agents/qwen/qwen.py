@@ -56,6 +56,8 @@ class QwenAgent(BaseAgent):
         self.max_pixels = 9800 * 32 * 32
         # Number of recent images to include (including current)
         self.visual_history_length = 4
+        
+        self.verbose = os.getenv("VERBOSE", "true").lower() == "true"
 
     async def _get_expanded_select(self, page: Page):
         """Return first <select> element-handle that is AX-expanded, else None."""
@@ -219,7 +221,8 @@ class QwenAgent(BaseAgent):
             state.messages.append(
                 {"role": "user", "content": f"## Task Goal\n{state.goal}"}
             )
-            print(f"\n--- USER (Goal) ---\n{state.goal}")
+            if self.verbose:
+                print(f"\n--- USER (Goal) ---\n{state.goal}")
 
         # Append current screenshot message to state to interleave with dialogue
 
@@ -238,7 +241,8 @@ class QwenAgent(BaseAgent):
                 ],
             }
         )
-        print("\n--- USER (Screenshot) ---")
+        if self.verbose:
+            print("\n--- USER (Screenshot) ---")
 
         # Build messages (will filter to the last 4 images)
         messages = await self.build_messages(state, screenshot)
@@ -270,7 +274,8 @@ class QwenAgent(BaseAgent):
         # Save assistant message to state (just content, no tool parsing)
         content = message.content or ""
         state.messages.append({"role": "assistant", "content": content})
-        print(f"\n--- ASSISTANT ---\n{content}")
+        if self.verbose:
+            print(f"\n--- ASSISTANT ---\n{content}")
 
         # Parse and execute tool calls
         tool_calls = self._parse_tool_calls(message.content)
@@ -321,6 +326,7 @@ Available dropdown options: {dropdown_options}"""
             # Save result as simple user message
             result_content = "\n".join(result_parts)
             state.messages.append({"role": "user", "content": result_content})
-            print(f"\n--- TOOL RESULTS ---\n{result_content}")
+            if self.verbose:
+                print(f"\n--- TOOL RESULTS ---\n{result_content}")
 
         return state

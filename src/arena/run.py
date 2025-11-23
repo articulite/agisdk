@@ -217,7 +217,7 @@ class RunHarness:
                 all_runs.append((task_spec, task_index, sample_idx))
 
         # Run all task-sample combinations
-        await asyncio.gather(
+        results = await asyncio.gather(
             *[
                 run_with_semaphore(task_spec, task_idx, sample_idx)
                 for task_spec, task_idx, sample_idx in all_runs
@@ -227,6 +227,7 @@ class RunHarness:
         print(
             f"Success: {self.successful_count}, Failures: {self.failed_count}, total benchmark time: {self.total_task_time:.2f}s"
         )
+        return results
 
     def _record_result_time(self, result: Optional["ExperimentResult"]) -> None:
         if result is None:
