@@ -152,8 +152,8 @@ class QwenToolExecutor:
         # If point_2d provided, scroll at that position
         if "point_2d" in tool_input:
             point = tool_input["point_2d"]
-            x, y = self.scale_coordinates(point[0], point[1])
-            await self.page.mouse.move(x, y)
+            scroll_x, scroll_y = self.scale_coordinates(point[0], point[1])
+            await self.page.mouse.move(scroll_x, scroll_y)
         else:
             viewport_size = await self.page.evaluate(
                 "({width: window.innerWidth, height: window.innerHeight})"
