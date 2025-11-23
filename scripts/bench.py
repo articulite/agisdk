@@ -13,8 +13,8 @@ async def main():
     harness = RunHarness(
         agent=agent,
         tasks=[
-            #"gocalendar-1.json" # was "src/benchmarks/hackathon/tasks/*"
-            "src/benchmarks/hackathon/tasks/*"
+            "gocalendar-1.json" # was "src/benchmarks/hackathon/tasks/*"
+            #"src/benchmarks/hackathon/tasks/*"
         ],
         parallel=1, # was 60
         sample_count=1,

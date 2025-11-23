@@ -36,7 +36,9 @@ class QwenAgent(BaseAgent):
     def __init__(
         self,
         # model: str = "qwen3-vl-plus",
-        model: str = "qwen/qwen3-vl-235b-a22b-thinking",
+        #model: str = "qwen/qwen3-vl-235b-a22b-thinking",
+        #model: str = "google/gemini-2.5-flash-preview-09-2025",
+        model: str = "google/gemini-3-pro-image-preview",
         date_mode: str = "current",
         base_url: str | None = None,
         api_key: str | None = None,
