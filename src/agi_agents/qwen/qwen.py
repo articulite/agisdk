@@ -38,9 +38,9 @@ class QwenAgent(BaseAgent):
         # model: str = "qwen3-vl-plus",
         #model: str = "qwen/qwen3-vl-235b-a22b-thinking",
         #model: str = "google/gemini-2.5-flash-preview-09-2025",
-        # model: str = "google/gemini-3-pro-image-preview",
+        model: str = "google/gemini-3-pro-image-preview",
         # model: str = "x-ai/grok-code-fast-1",
-        model: str = "google/gemini-2.5-flash-lite-preview-09-2025",
+        #model: str = "google/gemini-2.5-flash-lite-preview-09-2025", # not good enough VLM
         # model: str = "google/gemini-2.0-flash-exp",
         date_mode: str = "current",
         base_url: str | None = None,

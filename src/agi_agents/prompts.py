@@ -53,6 +53,8 @@ finished({{"content": "summary"}})
 - Clear fields first: hotkey Control+A then Backspace.
 - For hidden dropdowns, use provided option values.
 - Report task details in finished().
+- CRITICAL: If the state does not change after an action, DO NOT REPEAT the same action. Try a different coordinate, a different part of the element, or a different tool.
+- Verify your action's effect by checking the screenshot.
 
 ## Output
 Reasoning line.
